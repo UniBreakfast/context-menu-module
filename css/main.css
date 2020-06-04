@@ -4,3 +4,77 @@
     padding: 0;
     font-family: sans-serif;
 }
+
+body > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+p {
+    font-size: 18px;
+}
+
+.glass {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 111;
+    display: flex;
+}
+
+.contextMenu {
+    position: absolute;
+    box-shadow: 0 0 3px #333;
+    border-radius: 10px;
+    background: #f5f5f5;
+    overflow: hidden;
+    transition: .3s;
+    white-space: nowrap;
+}
+
+#glass {
+    display: none;
+}
+
+#contextMenu {
+    top: 200px;
+    left: 300px;
+    height: 200px;
+    width: 100px;
+    overflow: hidden;
+}
+
+#contextMenu ul {
+    top: 0;
+    left: 0;
+    height: 200px;
+    width: 100px;
+    transition: .3s;
+}
+
+#contextMenu.small {
+    top: 280px;
+    height: 40px;
+}
+
+#contextMenu.small ul {
+    top: -80px;
+}
+
+.contextMenu ul {
+    position: absolute;
+    list-style: none;
+    padding: 8px;
+    transition: .3s;
+}
+
+.contextMenu > li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none !important;
+}
