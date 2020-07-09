@@ -7,10 +7,8 @@ const menuItems = {
 }
 
 document.querySelectorAll('button').forEach(btn => addMenu(btn, menuItems))
+contextMenu.onclick = () => contextMenu.classList.toggle('small')
 
-contextMenu.onclick = () => {
-    contextMenu.classList.toggle('small')
-}
 function addMenu(el, menuItems) {
     const glass = document.createElement("div")
     glass.className = 'glass'
@@ -24,21 +22,22 @@ function addMenu(el, menuItems) {
     document.body.append(glass)
     
     toggleGlass()
-    glass.onclick = e => {
-        // if (e.target == glass) hideMenu()
-        if (e.target == glass) toggleGlass()
-    }
+    glass.onclick = handleGlass
     el.onclick = showMenu
 
     menu.style.overflow = 'hidden'
+
+    function handleGlass(e) {
+        if (e.target == glass) hideMenu()
+    }
 
     function buildLi([innerText, fn]) {
         const li = document.createElement('li')
         li.innerText = innerText
         li.onclick = () => {
             fn()
-            // hideMenu()
-            toggleGlass()
+            hideMenu()
+            // toggleGlass()
         }
         return li
     }
@@ -48,6 +47,8 @@ function addMenu(el, menuItems) {
     }
 
     function showMenu() {
+        glass.onclick = null
+        setTimeout(() => glass.onclick = handleGlass, 1000)
         toggleGlass()
         const {height: listHeight, width: listWidth} = list.getBoundingClientRect()
         toggleGlass()
@@ -63,10 +64,10 @@ function addMenu(el, menuItems) {
         const listLeft = menuLeft < left ? menuLeft - left : 0
         const listTop = menuTop < top ? menuTop - top : 0
 
-        list.style.left = listLeft + 'px'
+        list.style.left = list.styleLeft = listLeft + 'px'
         list.style.top = listTop + 'px'
         menu.style.top = top + 'px'
-        menu.style.left = (left > right ? left : left + width) + 'px'
+        menu.style.left = menu.styleLeft = (left > right ? left : left + width) + 'px'
         menu.style.width = 0
         menu.style.height = height + 'px'
         toggleGlass()
@@ -80,18 +81,37 @@ function addMenu(el, menuItems) {
                 menu.style.height = listHeight + 'px'
                 menu.style.top = menuTop + 'px'
                 list.style.top = 0
-                menu.ontransitionend = null
+                menu.ontransitionend = () => {
+                    // glass.onclick = handleGlass
+                    menu.ontransitionend = null
+                }
             }
         }, 50)
     }
 
     function hideMenu() {
+        glass.onclick = null
+        const {top: menuTop} = menu.getBoundingClientRect()
         const {top, height} = el.getBoundingClientRect()
-        list.style.maxHeight = `${height}px`
-        list.style.top = `${top}px`
-        list.ontransitionend = () => {
-            toggleGlass()
-            list.ontransitionend = null
+        const listTop = menuTop < top ? menuTop - top : 0
+        menu.style.height = `${height}px`
+        menu.style.top = `${top}px`
+        list.style.top = `${listTop}px`
+        menu.ontransitionend = () => {
+            setTimeout(() => {
+                menu.style.width = 0
+                menu.style.left = menu.styleLeft
+                list.style.left = list.styleLeft
+                menu.ontransitionend = () => {
+                    toggleGlass()
+                    menu.style.height = menu.style.top = list.style.top = menu.style.left =
+                        list.style.left = menu.ontransitionend = null
+                    menu.ontransitionend = () => {
+                        glass.onclick = handleGlass
+                        menu.ontransitionend = null
+                    }
+                }
+            }, 50)
         }
     }
 }

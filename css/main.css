@@ -66,12 +66,12 @@ p {
 .contextMenu ul {
     position: absolute;
     list-style: none;
-    padding: 8px;
+    padding: 1px 8px;
     transition: .3s;
 }
 
-.contextMenu > li {
-    padding: 8px;
+.contextMenu ul > li {
+    padding: 2px;
     cursor: pointer;
 }
 
