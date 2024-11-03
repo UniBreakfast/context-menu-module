@@ -1,4 +1,4 @@
-# context-menu-module
+# [context-menu-module](https://github.com/UniBreakfast/context-menu-module)
 
 ### A module to implement in-place context menu with roll-out animation in a correct direction
 
